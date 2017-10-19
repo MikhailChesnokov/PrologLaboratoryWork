@@ -1,6 +1,6 @@
 predicates
- rulers(String, integer, integer)
- RulerAtYear(integer, String)
+ ruler(String, integer, integer)
+ RulersAtYear(integer, String)
  RulersInInterval(integer,integer,String)
 clauses
  ruler("Yaroslav the Wise",1019,1054).
