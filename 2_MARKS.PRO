@@ -1,15 +1,13 @@
 predicates
- nondeterm marks(String, integer, integer, integer)
+ marks(String, integer, integer, integer)
  superior(String)
  mathematitian(String)
  debtor(String)
  debtorByAnalysis(String)
- nondeterm best(String)
- nondeterm getSum(String,integer)
- nondeterm betterExists(String)
  lazyProgrammer(String)
+ findMax(String,integer, integer, integer)
+ best(String)
 clauses
-
  marks("Ivanov",10,9,10).
  marks("Petrov",7,6,3).
  marks("Sidorov",5,4,9).
@@ -27,35 +25,34 @@ clauses
  			ANALYSIS>=6.
 
  debtor(SURNAME):-marks(SURNAME,ALGEBRA,_,_),
-				ALGEBRA<4;
-			marks(SURNAME,_,ANALYSIS,_),
-				ANALYSIS<4;
-			marks(SURNAME,_,_,PROGRAMMING),
-				PROGRAMMING<4.
+ 			ALGEBRA<4;
+ 		  marks(SURNAME,_,ANALYSIS,_),
+ 		  	ANALYSIS<4;
+ 		  marks(SURNAME,_,_,PROGRAMMING),
+ 			PROGRAMMING<4.
 
  debtorByAnalysis(SURNAME):-marks(SURNAME,_,ANALYSIS,_),
- 			ANALYSIS<4.
- 	
- getSum(SURNAME,SUM):-marks(SURNAME,M1,M2,M3),
-						SUM = M1 + M2 + M3.
- betterExists(SURNAME):-getSum(SURNAME,SUM),
-						getSum(_,SUM2),
-						SUM2>SUM.
- /* "best" isn't works with nondeterm. */
- best(SURNAME):-not(betterExists(SURNAME)).
- 
+ 				ANALYSIS<4.
+				
+ findMax(_,M1,M2,M3):-marks(_,X,Y,Z),
+			X + Y + Z > M1 + M2 + M3,
+ 			!,fail.
+ findMax(_,_,_,_).
+ best(SURNAME):-marks(SURNAME,M1,M2,M3),
+			findMax(SURNAME,M1,M2,M3).
+ 				
  lazyProgrammer(SURNAME):-marks(SURNAME,ALGEBRA,_,PROGRAMMING),
-				PROGRAMMING>8,
-				ALGEBRA<5;
- 			marks(SURNAME,_,ANALYSIS,PROGRAMMING),
-				PROGRAMMING>8,
-				ANALYSIS<5.
+ 			PROGRAMMING>8,
+ 			ALGEBRA<5,!.
+ lazyProgrammer(SURNAME):-marks(SURNAME,_,ANALYSIS,PROGRAMMING),
+ 			PROGRAMMING>8,
+ 			ANALYSIS<5.
  /*
  goal
-   superior("Ivanov")
-   mathematitian(X1)
-   debtorByAnalysis(X2)
-   debtor(X3)
-   best("Ivanov") - only nondeterm
-   lazyProgrammer(X4)
+   superior("Ivanov"),
+   mathematitian(X1),
+   debtorByAnalysis(X2),
+   debtor(X3),
+   best(X4),
+   lazyProgrammer(X5).
  */
